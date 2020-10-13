@@ -109,7 +109,8 @@ class SimpleSwitch13(app_manager.RyuApp):
             #                 stat.instructions[0].actions[0].port,
             #                 stat.packet_count, stat.byte_count)
             self.logger.info('%8d %8d %s', stat.packet_count, stat.byte_count, stat.instructions)
-            #test drop
+            
+	    #test drop the packet
             packet_count = stat.packet_count
             byte_count = stat.byte_count
             #global proto
@@ -271,38 +272,18 @@ class SimpleSwitch13(app_manager.RyuApp):
                #if ICMP protocol
                if protocol == in_proto.IPPROTO_ICMP:
                     match = parser.OFPMatch(in_port=in_port,eth_src=src,eth_dst=dst,eth_type=ether_types.ETH_TYPE_IP,ipv4_dst=dstip,ipv4_src=srcip,ip_proto=protocol)
-#,ipv4_src=srcip
                #if TCP protocol
                elif protocol == in_proto.IPPROTO_TCP:
                       t = pkt.get_protocol(tcp.tcp)
                       tsrcport = t.src_port
                       tdstport = t.dst_port
                       match = parser.OFPMatch(in_port=in_port,eth_src=src,eth_dst=dst,eth_type=ether_types.ETH_TYPE_IP,ipv4_dst=dstip,ipv4_src=srcip,ip_proto=protocol,tcp_dst=tdstport)
-#,ipv4_src=srcip,tcp_src=tsrcport
                #if UDP protocol
                elif protocol == in_proto.IPPROTO_UDP:
                       u = pkt.get_protocol(udp.udp)
                       usrcport = u.src_port
                       udstport = u.dst_port
                       match = parser.OFPMatch(in_port=in_port,eth_src=src,eth_dst=dst,eth_type=ether_types.ETH_TYPE_IP,ipv4_dst=dstip,ipv4_src=srcip,ip_proto=protocol,udp_dst=udstport)
-#,udp_src=usrcport,ipv4_src=srcip
-		      #for stat in msg.body:
-			#if (match == stat.match and stat.priority == 100):
-			#	if (stat.packet_count >= 100000 and stat.byte_count >= 6000000):
-			#		pri = 200
-			#		actions = []
-
-		      #if stat.match['ip_proto'] == 17:
-			#if (packet_count >= 100000 and byte_count >= 6000000): #packet_length>=60
-			#	datapath = ev.msg.datapath		
-			#	pri = 200
-			#	match = stat.match
-			#	actions = []
-			#	self.add_flow(datapath, pri, match, actions)
-
-                      #if (packet_count >= 10 and byte_count >=30):
-                         #pri = 200
-                         #actions = []
                          
                # verify if we have a valid buffer_id, if yes avoid to send both
                # flow_mod & packet_out
